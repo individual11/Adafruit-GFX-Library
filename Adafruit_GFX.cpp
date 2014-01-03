@@ -278,16 +278,108 @@ void Adafruit_GFX::drawEQTriangle(int16_t centerX, int16_t centerY, int16_t radi
           rot = rotation/radianConversion;
     
     //figure out the coordinates we need
-    int x1 = (int)((sin(rot) * radius)) + centerX,
-    y1 = (int)((cos(rot) * radius)) + centerY,
-    x2 = (int)((sin(rot + bufferRadians)) * radius) + centerX,
-    y2 = (int)((cos(rot + (bufferRadians * 1))) * radius) + centerY,//4,//(int)((cos(rot + bufferRadians)) * radius) + centerY,
-    x3 = (int)((sin(rot + (bufferRadians * 2))) * radius) + centerX,
-    y3 = (int)((cos(rot + (bufferRadians * 2))) * radius) + centerY;
+    int x0 = (int)((sin(rot) * radius)) + centerX,
+    y0 = (int)((cos(rot) * radius)) + centerY,
+    x1 = (int)((sin(rot + bufferRadians)) * radius) + centerX,
+    y1 = (int)((cos(rot + (bufferRadians * 1))) * radius) + centerY,
+    x2 = (int)((sin(rot + (bufferRadians * 2))) * radius) + centerX,
+    y2 = (int)((cos(rot + (bufferRadians * 2))) * radius) + centerY;
     
-    drawLine(x1,y1, x2,y2, color);
-    drawLine(x2, y2, x3, y3, color);
-    drawLine(x3, y3, x1, y1, color);
+    drawLine(x0,y0, x1,y1, color);
+    drawLine(x1, y1, x2, y2, color);
+    drawLine(x2, y2, x0, y0, color);
+}
+
+// Draw a filled-in equilateral triangle
+void Adafruit_GFX::fillEQTriangle(int16_t centerX, int16_t centerY, int16_t radius, int16_t rotation, uint16_t color) {
+    // convert rotation angle to radians
+    float radianConversion = 57.2958,
+    bufferRadians = 120/radianConversion,
+    rot = rotation/radianConversion;
+    
+    //figure out the coordinates we need
+    int x0 = (int)((sin(rot) * radius)) + centerX,
+    y0 = (int)((cos(rot) * radius)) + centerY,
+    x1 = (int)((sin(rot + bufferRadians)) * radius) + centerX,
+    y1 = (int)((cos(rot + (bufferRadians * 1))) * radius) + centerY,
+    x2 = (int)((sin(rot + (bufferRadians * 2))) * radius) + centerX,
+    y2 = (int)((cos(rot + (bufferRadians * 2))) * radius) + centerY;
+    
+    int16_t a, b, y, last;
+    
+    // Sort coordinates by Y order (y2 >= y1 >= y0)
+    if (y0 > y1) {
+        swap(y0, y1); swap(x0, x1);
+    }
+    if (y1 > y2) {
+        swap(y2, y1); swap(x2, x1);
+    }
+    if (y0 > y1) {
+        swap(y0, y1); swap(x0, x1);
+    }
+    
+    if(y0 == y2) { // Handle awkward all-on-same-line case as its own thing
+        a = b = x0;
+        if(x1 < a)      a = x1;
+        else if(x1 > b) b = x1;
+        if(x2 < a)      a = x2;
+        else if(x2 > b) b = x2;
+        drawFastHLine(a, y0, b-a+1, color);
+        return;
+    }
+    
+    int16_t
+    dx01 = x1 - x0,
+    dy01 = y1 - y0,
+    dx02 = x2 - x0,
+    dy02 = y2 - y0,
+    dx12 = x2 - x1,
+    dy12 = y2 - y1,
+    sa   = 0,
+    sb   = 0;
+    
+    // For upper part of triangle, find scanline crossings for segments
+    // 0-1 and 0-2.  If y1=y2 (flat-bottomed triangle), the scanline y1
+    // is included here (and second loop will be skipped, avoiding a /0
+    // error there), otherwise scanline y1 is skipped here and handled
+    // in the second loop...which also avoids a /0 error here if y0=y1
+    // (flat-topped triangle).
+    if(y1 == y2) last = y1;   // Include y1 scanline
+    else         last = y1-1; // Skip it
+    
+    for(y=y0; y<=last; y++) {
+        a   = x0 + sa / dy01;
+        b   = x0 + sb / dy02;
+        sa += dx01;
+        sb += dx02;
+        /* longhand:
+         a = x0 + (x1 - x0) * (y - y0) / (y1 - y0);
+         b = x0 + (x2 - x0) * (y - y0) / (y2 - y0);
+         */
+        if(a > b) swap(a,b);
+        drawFastHLine(a, y, b-a+1, color);
+    }
+    
+    // For lower part of triangle, find scanline crossings for segments
+    // 0-2 and 1-2.  This loop is skipped if y1=y2.
+    sa = dx12 * (y - y1);
+    sb = dx02 * (y - y0);
+    for(; y<=y2; y++) {
+        a   = x1 + sa / dy12;
+        b   = x0 + sb / dy02;
+        sa += dx12;
+        sb += dx02;
+        /* longhand:
+         a = x1 + (x2 - x1) * (y - y1) / (y2 - y1);
+         b = x0 + (x2 - x0) * (y - y0) / (y2 - y0);
+         */
+        if(a > b) swap(a,b);
+        drawFastHLine(a, y, b-a+1, color);
+    }
+    
+    //drawLine(x0,y0, x1,y1, color);
+    //drawLine(x1, y1, x2, y2, color);
+    //drawLine(x2, y2, x0, y0, color);
 }
 
 // Fill a triangle
