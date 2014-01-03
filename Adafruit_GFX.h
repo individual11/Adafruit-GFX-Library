@@ -42,6 +42,7 @@ class Adafruit_GFX : public Print {
       int16_t x2, int16_t y2, uint16_t color),
     fillTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
       int16_t x2, int16_t y2, uint16_t color),
+    drawEQTriangle(int16_t centerX, int16_t centerY, int16_t radius, int16_t rotation, uint16_t color),
     drawRoundRect(int16_t x0, int16_t y0, int16_t w, int16_t h,
       int16_t radius, uint16_t color),
     fillRoundRect(int16_t x0, int16_t y0, int16_t w, int16_t h,

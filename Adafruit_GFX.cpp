@@ -270,6 +270,26 @@ void Adafruit_GFX::drawTriangle(int16_t x0, int16_t y0,
   drawLine(x2, y2, x0, y0, color);
 }
 
+// Draw an equilateral triangle
+void Adafruit_GFX::drawEQTriangle(int16_t centerX, int16_t centerY, int16_t radius, int16_t rotation, uint16_t color) {
+    // convert rotation angle to radians
+    float radianConversion = 57.2958,
+          bufferRadians = 120/radianConversion,
+          rot = rotation/radianConversion;
+    
+    //figure out the coordinates we need
+    int x1 = (int)((sin(rot) * radius)) + centerX,
+    y1 = (int)((cos(rot) * radius)) + centerY,
+    x2 = (int)((sin(rot + bufferRadians)) * radius) + centerX,
+    y2 = (int)((cos(rot + (bufferRadians * 1))) * radius) + centerY,//4,//(int)((cos(rot + bufferRadians)) * radius) + centerY,
+    x3 = (int)((sin(rot + (bufferRadians * 2))) * radius) + centerX,
+    y3 = (int)((cos(rot + (bufferRadians * 2))) * radius) + centerY;
+    
+    drawLine(x1,y1, x2,y2, color);
+    drawLine(x2, y2, x3, y3, color);
+    drawLine(x3, y3, x1, y1, color);
+}
+
 // Fill a triangle
 void Adafruit_GFX::fillTriangle ( int16_t x0, int16_t y0,
 				  int16_t x1, int16_t y1,
