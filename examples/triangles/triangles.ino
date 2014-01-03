@@ -13,8 +13,7 @@
 // until the first call to swapBuffers().  This is normal.
 RGBmatrixPanel matrix(A, B, C, CLK, LAT, OE, true);
 
-int numberOfTriangles = 4,
-    rot = 1;
+int rot = 1;
     
 long hue = 6;
 
@@ -24,22 +23,20 @@ void setup() {
 }
 
 void loop(){
-  // Clear background
- // matrix.fillScreen(0);
 
  matrix.drawEQTriangle(16, 8, 28, rot, matrix.ColorHSV(hue, 255, 255, true));
  matrix.drawEQTriangle(16, 8, 26, rot, matrix.ColorHSV(hue-50, 255, 255, true));
-matrix.drawEQTriangle(16, 8, 24, rot, matrix.ColorHSV(hue-100, 255, 255, true));
-matrix.drawEQTriangle(16, 8, 22, rot, matrix.ColorHSV(hue-150, 255, 255, true));
-matrix.drawEQTriangle(16, 8, 20, rot, matrix.ColorHSV(hue-200, 255, 255, true));
-matrix.drawEQTriangle(16, 8, 18, rot, matrix.ColorHSV(hue-250, 255, 255, true));
-matrix.drawEQTriangle(16, 8, 16, rot, matrix.ColorHSV(hue-300, 255, 255, true));
-matrix.drawEQTriangle(16, 8, 14, rot, matrix.ColorHSV(hue-350, 255, 255, true));
-matrix.drawEQTriangle(16, 8, 12, rot, matrix.ColorHSV(hue-400, 255, 255, true));
-matrix.drawEQTriangle(16, 8, 10, rot, matrix.ColorHSV(hue-450, 255, 255, true));
-matrix.drawEQTriangle(16, 8, 8, rot, matrix.ColorHSV(hue-500, 255, 255, true));
-matrix.drawEQTriangle(16, 8, 6, rot, matrix.ColorHSV(hue-550, 255, 255, true));
-matrix.drawEQTriangle(16, 8, 4, rot, matrix.ColorHSV(hue-600, 255, 255, true));
+ matrix.drawEQTriangle(16, 8, 24, rot, matrix.ColorHSV(hue-100, 255, 255, true));
+ matrix.drawEQTriangle(16, 8, 22, rot, matrix.ColorHSV(hue-150, 255, 255, true));
+ matrix.drawEQTriangle(16, 8, 20, rot, matrix.ColorHSV(hue-200, 255, 255, true));
+ matrix.drawEQTriangle(16, 8, 18, rot, matrix.ColorHSV(hue-250, 255, 255, true));
+ matrix.drawEQTriangle(16, 8, 16, rot, matrix.ColorHSV(hue-300, 255, 255, true));
+ matrix.drawEQTriangle(16, 8, 14, rot, matrix.ColorHSV(hue-350, 255, 255, true));
+ matrix.drawEQTriangle(16, 8, 12, rot, matrix.ColorHSV(hue-400, 255, 255, true));
+ matrix.drawEQTriangle(16, 8, 10, rot, matrix.ColorHSV(hue-450, 255, 255, true));
+ matrix.drawEQTriangle(16, 8, 8, rot, matrix.ColorHSV(hue-500, 255, 255, true));
+ matrix.drawEQTriangle(16, 8, 6, rot, matrix.ColorHSV(hue-550, 255, 255, true));
+ matrix.drawEQTriangle(16, 8, 4, rot, matrix.ColorHSV(hue-600, 255, 255, true));
 
 
   rot+=3;
